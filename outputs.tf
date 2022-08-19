@@ -63,16 +63,3 @@ output "database_subnets_cidr_blocks" {
 output "database_subnets_id_map" {
   value = zipmap(var.subnet_availability_zone, [for k in aws_subnet.database : k.id])
 }
-
-##################################
-# Security Groups
-##################################
-output "public_sg_id" {
-  value = aws_security_group.public.id
-}
-output "private_sg_id" {
-  value = aws_security_group.private.id
-}
-output "database_sg_id" {
-  value = aws_security_group.database.id
-}

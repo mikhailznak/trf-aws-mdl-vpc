@@ -173,7 +173,7 @@ variable "database_outbound_acl_rules" {
       from_port   = 0
       to_port     = 0
       protocol    = "-1"
-      cidr_block  = "10.0.0.0/16"
+      cidr_block  = "0.0.0.0/0"
     },
   ]
 }
