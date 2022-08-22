@@ -14,7 +14,12 @@ resource "aws_vpc" "this" {
   enable_dns_support   = var.vpc_enable_dns_support
   enable_dns_hostnames = var.vpc_enable_dns_hostnames
 
-  tags = var.tags
+  tags = merge(
+    {
+      "Name" : var.vpc_name
+    },
+    var.tags
+  )
 }
 
 ##################################
@@ -35,6 +40,7 @@ resource "aws_eip" "nat" {
   count = var.nat_gateway && length(var.subnet_private_cidrs) > 0 && length(var.subnet_public_cidrs) > 0 ? 1 : 0
   tags = merge(
     {
+      "Name": "${var.vpc_name}-ip-nat"
       "Attached" : "Nat Gateway"
     },
     var.tags
@@ -47,7 +53,7 @@ resource "aws_nat_gateway" "this" {
 
   tags = merge(
     {
-      Name = "nat-${var.subnet_availability_zone[0]}"
+      Name = "${var.vpc_name}-nat-${var.subnet_availability_zone[0]}"
     }
   )
 }
@@ -64,7 +70,7 @@ resource "aws_subnet" "private" {
 
   tags = merge(
     {
-      Name = "private-${each.key}"
+      Name = "${var.vpc_name}-subnet-private-${each.key}"
     },
     var.tags
   )
@@ -77,7 +83,7 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     {
-      Name = "public-${each.key}"
+      Name = "${var.vpc_name}-subnet-public-${each.key}"
     },
     var.tags
   )
@@ -90,7 +96,7 @@ resource "aws_subnet" "database" {
 
   tags = merge(
     {
-      Name = "database-${each.key}"
+      Name = "${var.vpc_name}-subnet-database-${each.key}"
     },
     var.tags
   )
@@ -123,7 +129,12 @@ resource "aws_default_route_table" "this" {
     update = "5m"
   }
 
-  tags = var.tags
+  tags = merge(
+    {
+      Name = "${var.vpc_name}-route-table-default"
+    },
+    var.tags
+  )
 }
 
 ################################################################################
@@ -136,7 +147,7 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      Name = "public-route-table"
+      Name = "${var.vpc_name}-route-table-public"
     },
     var.tags
   )
@@ -169,7 +180,7 @@ resource "aws_route_table" "private" {
 
   tags = merge(
     {
-      Name = "private-route-table"
+      Name = "${var.vpc_name}-route-table-private"
     },
     var.tags
   )
@@ -202,7 +213,7 @@ resource "aws_route_table" "database" {
 
   tags = merge(
     {
-      Name = "database-route-table"
+      Name = "${var.vpc_name}-route-table-database"
     },
     var.tags
   )
@@ -226,7 +237,7 @@ resource "aws_network_acl" "public" {
 
   tags = merge(
     {
-      Name = "public-nacl"
+      Name = "${var.vpc_name}-nacl-public"
     },
     var.tags
   )
@@ -274,7 +285,7 @@ resource "aws_network_acl" "private" {
 
   tags = merge(
     {
-      Name = "private-nacl"
+      Name = "${var.vpc_name}-nacl-private"
     },
     var.tags
   )
@@ -322,7 +333,7 @@ resource "aws_network_acl" "database" {
 
   tags = merge(
     {
-      Name = "database-nacl"
+      Name = "${var.vpc_name}-nacl-database"
     },
     var.tags
   )

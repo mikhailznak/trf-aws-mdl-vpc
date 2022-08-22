@@ -8,6 +8,11 @@ variable "tags" {
 # VPC
 #####################################
 
+variable "vpc_name" {
+  description = "VPC Name."
+  type        = string
+  default     = "default"
+}
 variable "vpc_cidr_block" {
   description = "CIDR IP block"
   type        = string
