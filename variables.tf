@@ -34,7 +34,13 @@ variable "vpc_enable_dns_hostnames" {
 #####################################
 
 variable "default_route_table_routes" {
-  description = "Configuration block of routes."
+  description = <<EOD
+Configuration block of routes..
+Usage example:
+```
+gateway_id = "self" - means that by default will be used IG created by this module
+```
+EOD
   type        = list(map(string))
   default     = []
 }

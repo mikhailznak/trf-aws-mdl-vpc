@@ -114,7 +114,7 @@ resource "aws_default_route_table" "this" {
     content {
       cidr_block                = route.value.cidr_block
       egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
-      gateway_id                = lookup(route.value, "gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null) == "self" ? aws_internet_gateway.this.id : lookup(route.value, "gateway_id", null)
       instance_id               = lookup(route.value, "instance_id", null)
       nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
       network_interface_id      = lookup(route.value, "network_interface_id", null)
